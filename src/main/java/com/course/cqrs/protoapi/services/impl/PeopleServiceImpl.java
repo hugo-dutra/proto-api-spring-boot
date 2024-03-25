@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import com.github.javafaker.Faker;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PeopleServiceImpl implements PeopleService {
@@ -25,8 +26,8 @@ public class PeopleServiceImpl implements PeopleService {
     public Optional<Person> getPersonById(String id) {
         return listOfPeople
                 .stream()
-                .findAny()
-                .filter(person -> person.getId().equals(id));
+                .filter(person -> person.getId().equals(id))
+                .findFirst();
     }
 
     @Override
@@ -48,8 +49,18 @@ public class PeopleServiceImpl implements PeopleService {
             throw new RuntimeException("Person not found");
         }
         listOfPeople.remove(personToUpdate.get());
-        listOfPeople.add(person);
-        return person;
+        Person updatedPerson = changePerson(id,person);
+        listOfPeople.add(updatedPerson);
+        return updatedPerson;
+    }
+
+    private Person changePerson(String personId,Person person) {
+        return new Person.PersonBuilder()
+                .id(personId)
+                .fullName(person.getFullName())
+                .birthDate(person.getBirthDate())
+                .age(person.getAge())
+                .build();
     }
 
     @Override
@@ -66,10 +77,8 @@ public class PeopleServiceImpl implements PeopleService {
     public List<Person> getPeopleByName(String name) {
         return listOfPeople
                 .stream()
-                .findAny()
                 .filter(person -> person.getFullName().contains(name))
-                .stream()
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override

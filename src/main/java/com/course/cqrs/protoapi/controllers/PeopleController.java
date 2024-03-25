@@ -36,7 +36,7 @@ public class PeopleController {
         return ResponseEntity.ok(peopleService.getPeople());
     }
 
-    @PostMapping("/")
+    @PostMapping("/create-person")
     public ResponseEntity<Person> createPerson(@RequestBody Person person) {
         return ResponseEntity.ok(peopleService.createPerson(person));
     }
@@ -52,7 +52,7 @@ public class PeopleController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/by-name/{name}")
     public ResponseEntity<List<Person>> getPeopleByName(@PathVariable("name") String name) {
         return ResponseEntity.ok(peopleService.getPeopleByName(name));
     }
